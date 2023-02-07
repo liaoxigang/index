@@ -1,0 +1,173 @@
+<html><head>
+  <meta charset="utf-8">
+  <title>酷炫的彩虹旋转隧道特效 AB模板网</title>
+  <style type="text/css">
+  body, html {
+    background-color:#111;
+    overflow:hidden;
+    margin:0 0;
+  }
+  #c {
+    position:absolute;
+    top: calc(50vh - 200px);
+    left: calc(50vw - 200px);
+  }
+  /* #alpha {
+    position:absolute;
+    top: calc(50vh + 220px);
+    left: calc(50vw - 50px);
+    width:100px;
+    height:40px;
+    background-color: #000;
+    border:none;
+    font:20px Verdana;
+    color:white;
+    text-shadow:0 0 2px white;
+    cursor:pointer;
+    
+    transition:.4s;
+  } */
+  #alpha:focus {
+    outline:none;
+  }
+  #alpha:hover {
+    background-color: #555;
+  }
+  #overlay {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: calc(50vh - 200px);
+    left: calc(50vw - 200px);
+    background-image: radial-gradient(transparent 20%, #111 69%);
+  }
+  </style>
+        
+  </head>
+  <body>
+  
+  <canvas id="c" height="400" width="400"></canvas>
+  <div style="position: fixed;z-index:1000;left:10px;top:10px;">
+    <button id="alpha">放大</button>
+  </div>
+  <div style="position: fixed;z-index:1000;right:10px;top:10px;">
+    <button id="alpha1">缩小</button>
+  </div>
+  <div id="overlay"></div>
+  
+  
+  <script>
+      var w = c.width =
+      h = c.height = 400,
+      ctx = c.getContext('2d'),
+      scale = 1,
+      total = 50,
+      particlesParRow = 10,
+      minValue = 30,
+      updatesBeforeStart = 500,
+      repaintColor = 'rgba(0, 0, 0, .04)',
+      templateColor = 'hsl(hue, 80%, 50%)',
+      
+      particles = [],
+      colors = [],
+      radiants = [],
+      colorPart = 360/total,
+      radiantPart = Math.PI*2/total,
+      alphaValue = true;
+  
+  for(var i = 0; i < total; ++i){
+    
+    var array = [];
+    particles.push(array);
+    colors.push(templateColor.replace('hue', colorPart * i));
+    radiants.push(radiantPart * i);
+    
+    for(var j = 0; j < particlesParRow; ++j){
+      array.push(i * minValue);
+    }
+  }
+  
+  for(var i = 0; i < updatesBeforeStart; ++i) update();
+  
+  function anim(){
+    window.requestAnimationFrame(anim);
+    
+    ctx.fillStyle = repaintColor;
+    ctx.beginPath();
+    ctx.arc(w/2, h/2, w/2 + 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath();
+    
+    ctx.translate(w/2, h/2);
+    ctx.rotate(.006);
+    ctx.translate(-w/2, -h/2);
+    
+    for(var i = 0; i < total; ++i){
+      ctx.fillStyle = colors[i];
+      
+      for(var j = 0; j < particlesParRow; ++j){
+        var particle = particles[i][j];
+        
+        particles[i][j] -= particle/70;
+        
+        ctx.beginPath();
+        ctx.arc(w/2, h/2, particle, radiants[i], radiants[i] + radiantPart);
+        ctx.arc(w/2, h/2, particles[i][j], radiants[i] + radiantPart, radiants[i], true);
+        ctx.closePath();
+        ctx.fill();
+        
+        if(particles[i][j] <= minValue && Math.random() < .1){
+          particles[i][j] = w/2;
+        }
+      }
+    }
+  }
+  
+  anim();
+  
+  function update(){
+    for(var i = 0; i < total; ++i){
+      for(var j = 0; j < particlesParRow; ++j){
+        var particle = particles[i][j];
+        
+        particles[i][j] -= particle/70;
+        
+        if(particles[i][j] <= minValue && Math.random() < .1){
+          particles[i][j] = w/2;
+        }
+      }
+    }
+  }
+  
+  alpha.addEventListener('click', function(){
+    scale+=0.1
+    document.getElementById('c').style.scale=scale
+    document.getElementById('overlay').style.scale=scale
+    // if(alphaValue){
+    //   alphaValue = false;
+    //   repaintColor = 'black';
+    //   // alpha.textContent = 'solid';
+    // } else {
+    //   alphaValue = true;
+    //   repaintColor = 'rgba(0, 0, 0, .04)';
+    //   // alpha.textContent = 'alpha';
+    // }
+  })
+  alpha1.addEventListener('click', function(){
+    scale-=0.1
+    document.getElementById('c').style.scale=scale
+    document.getElementById('overlay').style.scale=scale
+    // if(alphaValue){
+    //   alphaValue = false;
+    //   repaintColor = 'black';
+    //   // alpha.textContent = 'solid';
+    // } else {
+    //   alphaValue = true;
+    //   repaintColor = 'rgba(0, 0, 0, .04)';
+    //   // alpha.textContent = 'alpha';
+    // }
+  })
+  </script>
+  
+  
+  </body></html>
