@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body>
+  <svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+    <path id="rose-path" fill="none" stroke="#ff69b4" stroke-width="0.2" />
+  
+    <g transform="rotate(-45)">
+      <use href="#rose-path" />
+      <use href="#rose-path" transform="scale(1, -1)" />
+    </g>
+  
+    <g transform="rotate(-45)">
+      <use href="#rose-path" />
+      <use href="#rose-path" transform="scale(-1, 1)" />
+    </g>
+  </svg>
+  <script>
+    const rosePath = document.getElementById('rose-path');
+    let pathData = '';
+  
+    for (let angle = 0; angle <= Math.PI * 2; angle += 0.01) {
+      const x = 5 * Math.cos(angle);
+      const y = 5 * Math.sin(angle);
+  
+      const r = 50 * Math.sin(5 * angle);
+      const newX = r * Math.cos(angle);
+      const newY = r * Math.sin(angle);
+  
+      if (angle === 0) {
+        pathData += `M ${newX} ${newY} `;
+      } else {
+        pathData += `L ${newX} ${newY} `;
+      }
+  
+      pathData += `L ${x} ${y} `;
+    }
+  
+    rosePath.setAttribute('d', pathData);
+  </script>
+
+</body>
+</html>
+
